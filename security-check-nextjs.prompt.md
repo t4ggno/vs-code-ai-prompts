@@ -2,9 +2,11 @@
 description: Perform a comprehensive Next.js security review
 agent: agent
 ---
+
 Task: Perform a comprehensive security check of a Next.js codebase and report findings.
 
 Scope
+
 - Runtime-reachable paths only: routes, API routes, server actions, middleware, edge functions, webhooks, cron/queues.
 - Authentication/authorization, session/token handling, RBAC/ABAC, multi-tenant isolation.
 - Input validation, output encoding, and data shaping across server/client boundaries.
@@ -14,6 +16,7 @@ Scope
 - Dependency/security posture: known vulnerable packages, lockfiles, build pipeline.
 
 Requirements
+
 - Enumerate the public attack surface: routes, methods, params, auth requirements, and data types.
 - Verify every externally reachable endpoint enforces authn/authz and object-level access control.
 - Validate all untrusted inputs (query, body, headers, cookies, file uploads) using allow-lists.
@@ -27,6 +30,7 @@ Requirements
 - Identify improper inventory: undocumented endpoints, deprecated routes, debug endpoints.
 
 Next.js-specific focus areas
+
 - Route Handlers in `app/` and API routes in `pages/api/`.
 - Server Actions and usage of `"use server"`.
 - Middleware (`middleware.ts`) and its authn/authz enforcement.
@@ -38,19 +42,22 @@ Next.js-specific focus areas
 - Sensitive data in `public/` assets or generated JSON.
 
 Constraints
+
 - Do not modify code. Only report issues and recommended fixes.
 - Be exhaustive and systematic; no high-risk area can be skipped.
 - Use OWASP Secure Coding Practices checklist and OWASP API Security Top 10 (2023) as validation lenses.
 - Reference Next.js best practices where relevant.
 
 Deliverables (required format)
-1) Summary: overall security posture and themes.
-2) Findings: numbered list with severity, location, evidence, impact, recommendation, verification.
-3) Coverage Matrix: checklist categories reviewed (OWASP SCP + API Top 10).
-4) Unreviewed Areas: with rationale.
-5) Assumptions & Open Questions: info needed to finalize risk.
+
+1. Summary: overall security posture and themes.
+2. Findings: numbered list with severity, location, evidence, impact, recommendation, verification.
+3. Coverage Matrix: checklist categories reviewed (OWASP SCP + API Top 10).
+4. Unreviewed Areas: with rationale.
+5. Assumptions & Open Questions: info needed to finalize risk.
 
 Success Criteria
+
 - Every OWASP Secure Coding Practices category is addressed.
 - OWASP API Top 10 (2023) risks are explicitly checked against relevant endpoints.
 - All findings include evidence, impact, and actionable remediation.

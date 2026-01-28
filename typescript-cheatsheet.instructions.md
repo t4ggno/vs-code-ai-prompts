@@ -1,11 +1,13 @@
 ---
-applyTo: '**/*.{ts,tsx}'
+applyTo: "**/*.{ts,tsx}"
 ---
+
 # Modern TypeScript Cheatsheet (2025)
 
 ## Type System Essentials
 
 ### Modern Type Definitions
+
 ```typescript
 // Utility types - modern approach
 type User = {
@@ -16,13 +18,14 @@ type User = {
 
 // Template literal types
 type EventName = `on${Capitalize<string>}`;
-type Status = 'loading' | 'success' | 'error';
+type Status = "loading" | "success" | "error";
 
 // Conditional types with constraints
 type NonNullable<T> = T extends null | undefined ? never : T;
 ```
 
 ### Advanced Generics
+
 ```typescript
 // Generic constraints with keyof
 function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
@@ -37,17 +40,19 @@ type DeepReadonly<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> };
 ## Performance Best Practices
 
 ### Type Assertions (Avoid Runtime Cost)
+
 ```typescript
 // ✅ Good - Type assertion
-const element = document.getElementById('app') as HTMLElement;
+const element = document.getElementById("app") as HTMLElement;
 
 // ✅ Better - Type guards
-const isString = (value: unknown): value is string => typeof value === 'string';
+const isString = (value: unknown): value is string => typeof value === "string";
 
 // ❌ Avoid - Runtime type checking when not needed
 ```
 
 ### Efficient Array/Object Operations
+
 ```typescript
 // ✅ Destructuring with known structure
 const { id, name, ...rest } = user;
@@ -57,27 +62,31 @@ Object.entries(obj as Record<string, unknown>).forEach(([key, value]) => {});
 
 // ✅ Array methods with type inference
 const ids = users.map(({ id }) => id);
-const active = users.filter((user): user is ActiveUser => user.status === 'active');
+const active = users.filter(
+  (user): user is ActiveUser => user.status === "active",
+);
 ```
 
 ## Modern Features (TypeScript 5.0+)
 
 ### const assertions & satisfies
+
 ```typescript
 // ✅ const assertions for immutable data
 const config = {
-  apiUrl: 'https://api.example.com',
-  timeout: 5000
+  apiUrl: "https://api.example.com",
+  timeout: 5000,
 } as const;
 
 // ✅ satisfies operator for type checking
 const theme = {
-  colors: { primary: '#007acc' },
-  spacing: { small: 4 }
+  colors: { primary: "#007acc" },
+  spacing: { small: 4 },
 } satisfies Theme;
 ```
 
 ### Decorators & Metadata
+
 ```typescript
 // ✅ Modern decorator syntax (Stage 3)
 class UserService {
@@ -87,10 +96,11 @@ class UserService {
 ```
 
 ### Import/Export Patterns
+
 ```typescript
 // ✅ Type-only imports (tree-shaking friendly)
-import type { User } from './types';
-import { validateUser } from './utils';
+import type { User } from "./types";
+import { validateUser } from "./utils";
 
 // ✅ Named exports (better for tree-shaking)
 export const userService = new UserService();
@@ -100,12 +110,10 @@ export type { User, CreateUserDto };
 ## Async/Performance Patterns
 
 ### Promise & Async Best Practices
+
 ```typescript
 // ✅ Promise.all for parallel execution
-const [users, posts] = await Promise.all([
-  fetchUsers(),
-  fetchPosts()
-]);
+const [users, posts] = await Promise.all([fetchUsers(), fetchPosts()]);
 
 // ✅ Promise.allSettled for error handling
 const results = await Promise.allSettled([...promises]);
@@ -119,9 +127,10 @@ async function* processData(): AsyncGenerator<ProcessedItem> {
 ```
 
 ### Error Handling
+
 ```typescript
 // ✅ Result pattern for explicit error handling
-type Result<T, E = Error> = 
+type Result<T, E = Error> =
   | { success: true; data: T }
   | { success: false; error: E };
 
@@ -139,6 +148,7 @@ const safeAsync = async <T>(fn: () => Promise<T>): Promise<Result<T>> => {
 ## Strict Configuration
 
 ### tsconfig.json Essentials
+
 ```json
 {
   "compilerOptions": {
@@ -167,7 +177,7 @@ enum Status { Ready, Busy }
 if (typeof data === 'object') // when type is already known
 
 // ❌ Avoid nested conditional types when simpler alternatives exist
-type Complex<T> = T extends A ? (T extends B ? C : D) : E; 
+type Complex<T> = T extends A ? (T extends B ? C : D) : E;
 
 // ✅ Use union types or mapped types instead
 type Simple<T> = T extends A & B ? C : T extends A ? D : E;
@@ -176,12 +186,14 @@ type Simple<T> = T extends A & B ? C : T extends A ? D : E;
 ## Quick Reference
 
 ### Utility Types Priority List
+
 1. `Partial<T>`, `Required<T>`, `Pick<T, K>`, `Omit<T, K>`
 2. `NonNullable<T>`, `Parameters<T>`, `ReturnType<T>`
 3. `Awaited<T>` for async return types
 4. `Record<K, V>` for key-value structures
 
 ### Performance Tips
+
 - Use `const assertions` for immutable data
 - Prefer `interface` for object shapes (faster compilation)
 - Use `type` for unions, computed types
