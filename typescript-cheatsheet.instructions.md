@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: '**/*.{ts,tsx}'
 ---
 # Modern TypeScript Cheatsheet (2025)
 
@@ -158,6 +158,10 @@ const safeAsync = async <T>(fn: () => Promise<T>): Promise<Result<T>> => {
 ```typescript
 // ❌ Avoid
 any, Function, Object, {}, unknown without narrowing
+
+// ⚠️ Prefer unions for simple value sets
+// Enums can be useful for bitflags or interop with external APIs
+enum Status { Ready, Busy }
 
 // ❌ Avoid runtime type checking for known types
 if (typeof data === 'object') // when type is already known

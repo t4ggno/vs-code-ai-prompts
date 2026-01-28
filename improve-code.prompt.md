@@ -1,4 +1,5 @@
 ---
+description: Improve code quality and performance in a defined scope
 agent: agent
 ---
 You are an expert software engineer. Create a highly detailed, step-by-step execution plan and then execute it to completion.

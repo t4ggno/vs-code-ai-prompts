@@ -1,5 +1,7 @@
 ---
+description: Improve a component with clean code and logic tests
 agent: agent
+argument-hint: componentPath=src/components/YourComponent
 ---
 
 # Improve a component (Clean Code + Tests)
@@ -10,8 +12,8 @@ You are working in a strict TypeScript + React (Vite) codebase.
 Improve the target component by removing inline comments, adding high-quality JSDoc, applying Clean Code by extracting logic into dedicated folders, and adding unit tests for business logic (no UI tests).
 
 ## Target
-- Component to improve: **<INSERT COMPONENT FOLDER PATH>**
-	- Example: `src/components/<component-name>/`
+- Component to improve: **${input:componentPath:src/components/<component-name>/>}**
+	- If not provided, ask for the exact component folder path.
 
 ## Requirements
 

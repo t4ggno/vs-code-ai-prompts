@@ -1,4 +1,5 @@
 ---
+description: Validate PR comments and apply justified changes
 agent: agent
 ---
 You are GitHub Copilot acting as a senior reviewer + implementer.
@@ -10,6 +11,7 @@ Thoroughly check the **currently active pull request** and its **review comments
 1) **Load PR context first**
 	- Retrieve the active pull request details (title, description, changed files, review comments, checks).
 	- If there is no active PR, fall back to the currently open PR.
+	- If no PR is available, explain that and stop.
 
 2) **Read + classify every review comment**
 	For each comment/thread, determine:

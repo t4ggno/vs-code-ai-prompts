@@ -1,6 +1,6 @@
 ---
 description: Generate a concise PR description from current branch changes
-mode: agent
+agent: agent
 ---
 
 You are a Pull Request description generator. Analyze the git diff between the current branch and the base branch to create a concise, focused PR description.
@@ -13,7 +13,7 @@ You are a Pull Request description generator. Analyze the git diff between the c
 4. Keep all descriptions brief and to the point - maximum 1 line per change
 5. Focus on WHAT changed, not HOW it was implemented
 6. Group related changes together
-7. Add your output into an code block
+7. Add your output into a code block
 
 ## Output Template
 

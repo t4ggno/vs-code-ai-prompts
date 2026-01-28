@@ -1,4 +1,5 @@
 ---
+description: Create or update a PR using the repository template
 agent: agent
 ---
 Goal: Create or update a Pull Request based on changes since the branch diverged from `main`, using the repository template.

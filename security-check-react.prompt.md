@@ -1,4 +1,5 @@
 ---
+description: Perform a comprehensive React app security review
 agent: agent
 ---
 # Task: React Security Check (Comprehensive)

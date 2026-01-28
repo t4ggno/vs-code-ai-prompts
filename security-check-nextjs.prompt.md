@@ -1,4 +1,5 @@
 ---
+description: Perform a comprehensive Next.js security review
 agent: agent
 ---
 Task: Perform a comprehensive security check of a Next.js codebase and report findings.

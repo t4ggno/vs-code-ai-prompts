@@ -1,4 +1,5 @@
 ---
+description: Perform a comprehensive security review (general)
 agent: agent
 ---
 # Task: General Security Check (Comprehensive)

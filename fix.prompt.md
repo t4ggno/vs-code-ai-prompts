@@ -1,4 +1,5 @@
 ---
+description: Stabilize the workspace until it reaches a clean build
 agent: agent
 ---
 # Agent Directive: Autonomous Workspace Stabilization & Repair
@@ -20,6 +21,7 @@ Before modifying any files, validate your environment and stack.
 2.  **Health Check**:
     - Does `node_modules` exist?
     - Are configuration files (`tsconfig.json`, `.eslintrc`, `package.json`) valid JSON?
+    - If the project is not a Node/TypeScript workspace, explain and stop.
 
 ## 3. Phase 2: Strategic Planning
 Construct a mental plan before executing.

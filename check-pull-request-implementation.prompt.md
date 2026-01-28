@@ -1,6 +1,6 @@
-agent: agent
 ---
-applyTo: '**'
+description: Review PR implementation for correctness and completeness
+agent: agent
 ---
 
 # PR Implementation Review (Copilot Prompt)
@@ -31,6 +31,7 @@ Verify that the PR implements the intended change correctly, safely, and in a ma
 	- status checks / CI results
 	- review comments and unresolved threads
 	- risk level (low/medium/high) with one sentence why
+- If no PR is available, explain that and stop.
 
 ### 2) Enumerate and categorize changed files
 - List changed files grouped by category:

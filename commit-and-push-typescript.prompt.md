@@ -1,11 +1,16 @@
 
 ---
-description: Commit and push changes safely
+description: Run quality checks, commit, and push in order
 agent: agent
 ---
-Goal: stage changes, create a single-line commit message, and push safely.
+Goal: run linting, type-checking, formatting, and Git operations in order, then commit and push the changes safely.
 
 ## Requirements
+- Check for redundant comments to ensure code is cleaner (do not remove them automatically; fail if found).
+- Ensure that `any` is NOT used as a type. Fail if detected.
+- Run ESLint and ensure it completes successfully.
+- Run TypeScript type-checking with `tsc` and ensure it completes successfully.
+- Run the formatter and ensure it completes successfully.
 - Stage all modified files.
 - List changed files after staging.
 - Create a single-line commit message that:
@@ -36,29 +41,53 @@ Pick exactly one icon based on the primary change:
 - 🚑️ Critical hotfix
 
 ## Detailed Step-by-Step Workflow
-1) Stage all files
+1) Check for unnecessary comments
+	- Action: Scan the code changes for comments that state the obvious. Do not remove them automatically (that is the user's task). If found, stop and report the failure.
+	- Success criteria: Code is readable without "what-it-does" comments.
+
+2) Check for `any` type usage
+	- Action: Scan the code changes for usages of the `any` type. If found, stop and report the failure.
+	- Success criteria: No `any` type usage found.
+
+3) Run ESLint
+	- Command: `npm run lint` (or the project’s documented ESLint command).
+	- Success criteria: command exits with code 0 and no lint errors remain.
+
+4) Run TypeScript type-check
+	- Command: `npx tsc --noEmit` (or the project’s documented type-check command).
+	- Success criteria: command exits with code 0 and no type errors remain.
+
+5) Run formatter
+	- Command: `npm run format` (or the project’s documented formatting command).
+	- Success criteria: command exits with code 0 and formatting is applied.
+
+6) Stage all files
 	- Command: `git add -A`
 	- Success criteria: all relevant changes are staged.
 
-2) Check changed files
+7) Check changed files
 	- Command: `git status -sb` and `git diff --name-only --cached`
 	- Success criteria: staged file list is visible and correct.
 
-3) Review staged changes for commit message
+8) Review staged changes for commit message
 	- Command: `git diff --cached`
 	- Success criteria: staged diff content is visible to determine the correct Gitmoji and message.
 
-4) Commit with proper message (one line)
+9) Commit with proper message (one line)
 	- Template: `<Gitmoji Icon> <Uppercase message>`
 	- Example: `✨ Add transport reason to relocation order`
 	- Success criteria: commit created with a single-line message and correct Gitmoji.
 
-5) Push changes (local AND remote)
+10) Push changes (local AND remote)
 	- Command: `git push` (if upstream not set, use `git push -u origin <branch>`)
 	- Success criteria: push succeeds and remote branch is updated.
 
 ## Success Criteria
 - All commands completed successfully in order.
+- No unnecessary comments found.
+- No `any` type usage found.
+- No linting or type-checking errors.
+- Formatting applied.
 - Files staged and verified.
 - Commit created with correct Gitmoji and uppercase message.
 - Changes pushed to remote.

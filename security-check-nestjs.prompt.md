@@ -1,4 +1,5 @@
 ---
+description: Perform a comprehensive NestJS security review
 agent: agent
 ---
 # Task: NestJS Security Check (Comprehensive)

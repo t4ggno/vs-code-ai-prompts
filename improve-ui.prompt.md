@@ -1,5 +1,7 @@
 ---
+description: Improve UI/UX with shadcn-friendly refinements
 agent: agent
+argument-hint: scope=path/to/view or "all"
 ---
 You are an expert UI/UX improvement agent. Your job is to upgrade the visual design and usability of the existing product while respecting its structure, components, and style system.
 
