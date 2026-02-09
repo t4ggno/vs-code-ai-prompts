@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.{ts,tsx}"
+applyTo: "**"
 ---
 
 # TypeScript Development Guidelines
@@ -15,7 +15,7 @@ applyTo: "**/*.{ts,tsx}"
 ## Core Rules
 
 - **Never run/start applications** - server already running
-- **Always specify explicit return types** for all functions
+- **Specify explicit return types** if not `void`, else not required
 - **Use `for` loops instead of `forEach`** for performance
 - **Return early** to reduce nesting depth
 - **Keep functions under 20 lines** - extract logic when longer

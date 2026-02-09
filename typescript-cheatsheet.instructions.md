@@ -1,8 +1,8 @@
 ---
-applyTo: "**/*.{ts,tsx}"
+applyTo: "**"
 ---
 
-# Modern TypeScript Cheatsheet (2025)
+# Modern TypeScript Cheatsheet (2026)
 
 ## Type System Essentials
 
@@ -35,6 +35,86 @@ function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
 // Mapped types with modifiers
 type Optional<T> = { [K in keyof T]?: T[K] };
 type DeepReadonly<T> = { readonly [K in keyof T]: DeepReadonly<T[K]> };
+```
+
+## Narrowing & Type Guards
+
+```typescript
+// typeof guards
+function padLeft(padding: number | string, input: string): string {
+  if (typeof padding === "number") {
+    return " ".repeat(padding) + input;
+  }
+  return padding + input;
+}
+
+// in-operator guards
+type Fish = { swim: () => void };
+type Bird = { fly: () => void };
+
+function move(animal: Fish | Bird) {
+  if ("swim" in animal) {
+    animal.swim();
+    return;
+  }
+  animal.fly();
+}
+
+// user-defined type predicates
+const isFish = (pet: Fish | Bird): pet is Fish => "swim" in pet;
+```
+
+## Discriminated Unions & Exhaustiveness
+
+```typescript
+type Circle = { kind: "circle"; radius: number };
+type Square = { kind: "square"; sideLength: number };
+type Shape = Circle | Square;
+
+function getArea(shape: Shape): number {
+  switch (shape.kind) {
+    case "circle":
+      return Math.PI * shape.radius ** 2;
+    case "square":
+      return shape.sideLength ** 2;
+    default: {
+      const _exhaustive: never = shape;
+      return _exhaustive;
+    }
+  }
+}
+```
+
+## Assertion Functions
+
+```typescript
+function assertIsString(value: unknown): asserts value is string {
+  if (typeof value !== "string") {
+    throw new TypeError("Expected string");
+  }
+}
+
+function shout(value: unknown) {
+  assertIsString(value);
+  return value.toUpperCase();
+}
+```
+
+## this-based Type Guards (Classes)
+
+```typescript
+class Box<T> {
+  value?: T;
+
+  hasValue(): this is { value: T } {
+    return this.value !== undefined;
+  }
+}
+
+const box = new Box<string>();
+if (box.hasValue()) {
+  box.value.toUpperCase();
+}
 ```
 
 ## Performance Best Practices
@@ -145,24 +225,6 @@ const safeAsync = async <T>(fn: () => Promise<T>): Promise<Result<T>> => {
 };
 ```
 
-## Strict Configuration
-
-### tsconfig.json Essentials
-
-```json
-{
-  "compilerOptions": {
-    "strict": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noImplicitReturns": true,
-    "moduleResolution": "bundler",
-    "target": "ES2022",
-    "lib": ["ES2022", "DOM"]
-  }
-}
-```
-
 ## Common Anti-Patterns to Avoid
 
 ```typescript
@@ -195,7 +257,7 @@ type Simple<T> = T extends A & B ? C : T extends A ? D : E;
 ### Performance Tips
 
 - Use `const assertions` for immutable data
-- Prefer `interface` for object shapes (faster compilation)
-- Use `type` for unions, computed types
-- Enable `skipLibCheck` for faster compilation
-- Use `--isolatedModules` for parallel processing
+- Prefer `interface` over intersections for composed object shapes
+- Add explicit return types on public APIs to reduce inference cost
+- Name complex conditional/mapped types to improve reuse and readability
+- Prefer base types + subtypes over huge unions when modeling large domains

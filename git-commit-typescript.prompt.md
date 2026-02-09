@@ -7,7 +7,7 @@ Goal: run linting, type-checking, formatting, and Git operations in order, then 
 
 ## Requirements
 
-- Check for redundant comments to ensure code is cleaner (do not remove them automatically; fail if found).
+- Check for redundant inline comments to ensure code is cleaner (do not remove them automatically; fail if found). JSDoc comments/documentation comments are allowed.
 - Ensure that `any` is NOT used as a type. Fail if detected.
 - Run ESLint and ensure it completes successfully.
 - Run TypeScript type-checking with `tsc` and ensure it completes successfully.
@@ -47,8 +47,8 @@ Pick exactly one icon based on the primary change:
 ## Detailed Step-by-Step Workflow
 
 1. Check for unnecessary comments
-   - Action: Scan the code changes for comments that state the obvious. Do not remove them automatically (that is the user's task). If found, stop and report the failure.
-   - Success criteria: Code is readable without "what-it-does" comments.
+   - Action: Scan the code changes for inline comments that state the obvious (e.g. `// assigns value`). JSDoc comments (starting with `/**`) are allowed and encouraged. Do not remove unnecessary comments automatically (that is the user's task). If found, stop and report the failure.
+   - Success criteria: Code is readable without "what-it-does" inline comments.
 
 2. Check for `any` type usage
    - Action: Scan the code changes for usages of the `any` type. If found, stop and report the failure.
@@ -90,7 +90,7 @@ Pick exactly one icon based on the primary change:
 ## Success Criteria
 
 - All commands completed successfully in order.
-- No unnecessary comments found.
+- No unnecessary inline comments found.
 - No `any` type usage found.
 - No linting or type-checking errors.
 - Formatting applied.
