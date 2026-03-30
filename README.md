@@ -9,7 +9,11 @@ A curated set of VS Code Copilot prompt and instruction files used to guide auto
 
 ## Usage
 
-1. Place these files in your VS Code prompts directory.
+1. Place these files in your VS Code prompts directory
+
+- Windows: %appdata%\Code\User\prompts
+- Windows (Insiders): %appdata%\Code - Insiders\User\prompts
+
 2. Reference the prompts/instructions from your Copilot configuration or prompt picker.
 3. Adjust or extend individual prompts to match your team’s workflow.
 
