@@ -1,42 +1,53 @@
-# Debug: Analyze Error & Fix
+---
+description: Diagnose an error, identify the root cause, and implement or recommend the smallest safe fix
+agent: agent
+argument-hint: error details, stack trace, failing command, or failing test
+---
 
-**Goal**: Diagnose a coding error or runtime exception and propose a fix.
+# Debug: Analyze Error and Fix
 
-## Context
-When investigating bugs, we need to trace the root cause, not just patch the symptoms.
+## Goal
 
-## Instructions
+Diagnose a coding error or runtime failure, identify the real root cause, and either implement the smallest safe fix or explain the precise change needed.
 
-1.  **Input Data**: Ask for the following if not provided:
-    *   Error message / Stack trace.
-    *   Relevant code snippet(s).
-    *   Steps to reproduce.
-2.  **Analysis Phase**:
-    *   Trace the execution flow leading to the error.
-    *   Identify the exact line or logic failure.
-    *   Explain *why* it failed (e.g., "The variable `user` is undefined because the API call is async and wasn't awaited").
-3.  **Solution Phase**:
-    *   Propose a fix.
-    *   Explain any side effects of the fix.
-    *   Suggest a test case to prevent recurrence.
+## Inputs
 
-## Output Format
+- Error message, stack trace, failing command, or failing test output
+- Relevant file, symbol, or code snippet
+- Reproduction steps or observed vs expected behavior
 
-### 🚨 Root Cause Analysis
-[Explanation of what went wrong]
+If a required input is missing and cannot be inferred from the workspace or current selection, ask only the minimum clarifying questions needed to continue.
 
-### 🛠️ Proposed Fix
+## Required workflow
 
-```typescript
-// Old Code
-const data = fetchData(); // missing await
+1. Inspect the failing file, surrounding code, and relevant config/tests before drawing conclusions.
+2. Reconstruct the failure path and identify the exact condition that breaks.
+3. Explain the root cause in plain language with concrete evidence from the code or error output.
+4. Choose the smallest safe fix that preserves intended behavior and matches existing conventions.
+5. If the user asked for a fix, implement it directly. If the user asked for analysis only, do not edit files.
+6. Run the most relevant verification available: reproduction step, targeted test, type-check, lint, or diagnostics.
+7. Call out any remaining risks, edge cases, or missing context explicitly.
 
-// New Code
-const data = await fetchData();
-```
+## Constraints
 
-### ✅ Verification
-Add this test case to verify the fix:
-```typescript
-it('should handle async fetch correctly', async () => { ... })
-```
+- Do not guess about code you have not inspected.
+- Do not mask the problem with broad try/catch blocks, silent fallbacks, or unsafe type escapes unless clearly justified.
+- Avoid unrelated refactors.
+- Prefer fixing the underlying cause over patching the symptom.
+- If more than one plausible cause remains, rank them by confidence and explain what would confirm each one.
+
+## Output
+
+Use this structure:
+
+- **Problem summary**: what failed and where
+- **Root cause**: precise explanation with evidence
+- **Fix applied / recommended**: minimal change and why it works
+- **Verification**: what was checked and the result
+- **Follow-ups**: remaining risks, edge cases, or open questions
+
+## Success criteria
+
+- The explanation identifies the actual cause, not a guess.
+- The fix is minimal, grounded in evidence, and verified.
+- The user can clearly understand what failed, why, and how it was resolved.

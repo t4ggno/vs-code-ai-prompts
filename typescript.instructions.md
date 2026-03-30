@@ -4,56 +4,62 @@ applyTo: "**"
 
 # TypeScript Development Guidelines
 
-## Project Context
+## Applicability
 
-- NestJS backend with ExpressJS, PostgreSQL database
-- ReactJS frontend with NextJS, Tailwind CSS
-- Strict TypeScript throughout. Zero `any` types allowed
-- There are many helper methods/utilities in `src/helpers`. Always prefer them over new implementations! Prefetch all helpers before starting new code
-- There are many predefined components in `src/components`. Always prefer them over new implementations! Prefetch all components before starting new code
+- Apply these rules when the relevant scope contains TypeScript or JavaScript, or when the user asks for NestJS, React, or Next.js work.
+- If the workspace is not TypeScript-based, fall back to the general instructions and keep only the rules that still make sense.
+
+## Project context
+
+- Common stack: NestJS + Express + PostgreSQL backend, React + Next.js + Tailwind frontend.
+- Assume strict TypeScript unless the project clearly uses a different setup.
+
+## Investigate first
+
+- Before adding new code, inspect nearby modules and search for reusable helpers or components.
+- If `src/helpers` exists, check it before introducing new helpers.
+- If `src/components` exists, check it before creating new UI components.
+- Prefer project-defined scripts and config over guessed commands.
 
 ## Core Rules
 
-- **Never run/start applications** - server already running
-- **Specify explicit return types** if not `void`, else not required
-- **Use `for` loops instead of `forEach`** for performance
-- **Return early** to reduce nesting depth
-- **Keep functions under 20 lines** - extract logic when longer
+- Do not start long-running app servers unless the user explicitly asks.
+- Add explicit return types for public functions and any non-trivial new functions.
+- Prefer early returns to reduce nesting.
+- Aim to keep functions small and single-purpose; extract logic when length obscures intent.
+- Avoid `any`; use `unknown`, generics, unions, or type guards instead.
+- Prefer `for...of` or indexed loops over `forEach` when you need predictable control flow or hot-path performance.
 
 ## TypeScript Patterns
 
-- **Use utility types**: `Partial<T>`, `Pick<T, K>`, `Omit<T, K>` over custom interfaces
-- **Use `unknown` instead of `any`** for uncertain types
-- **Add `as const` assertions** for immutable data
-- **Include exhaustive `never` checks** in switch statements
-- **Use `?.` optional chaining** and `??` nullish coalescing
-- Prefer `interface` for object shapes and `type` for unions/utility compositions
+- Prefer utility types such as `Partial`, `Pick`, `Omit`, `Required`, and `Record` when they improve clarity.
+- Use `as const`, `satisfies`, discriminated unions, and exhaustive `never` checks where they strengthen correctness.
+- Use `?.` optional chaining and `??` nullish coalescing for null-safe code when appropriate.
+- Prefer `interface` for extensible object contracts and `type` for unions or utility compositions.
+- Use type-only imports when possible.
 
 ## Code Organization
 
-- **Use absolute imports** when available
-- **Prefer named exports** over default exports
-- **Use type-only imports** when importing only types
-- **Name functions with verbs**, booleans with `is/has/can` prefixes
-- **Avoid circular dependencies**
-- **Never create index.ts files** - use explicit file names
-- **Choose composition over inheritance**
+- Prefer named exports unless the surrounding module pattern clearly uses default exports.
+- Use absolute imports when the project is configured for them.
+- Avoid circular dependencies and barrel files unless the codebase already depends on them.
+- Name functions with verbs and booleans with `is`, `has`, or `can` prefixes.
+- Choose composition over inheritance.
 
 ## React/Frontend
 
-- **Use functional components only** with proper TypeScript interfaces
-- **Apply React.memo** when performance optimization needed
-- **Extract reusable logic** into custom hooks
-- **Implement error boundaries** with try/catch for async operations
+- Use functional components and typed props.
+- Extract reusable logic into hooks when it reduces duplication.
+- Handle loading, empty, error, and disabled states when relevant.
+- Keep server and client boundaries correct in Next.js and avoid mixing concerns.
 
 ## Testing (when requested)
 
-- **Name test files**: `{module}.{action}.spec.ts` in `__tests__` subfolder
-- **Focus on meaningful coverage** not percentages
-- **Test core functionality** thoroughly
+- Follow the project’s existing test framework and file naming conventions.
+- Prefer meaningful behavior coverage over testing implementation details.
+- Add tests only when requested or when the active task explicitly includes them.
 
-## Performance Requirements
+## Validation
 
-- **Break down long operations** to prevent blocking
-- **Use async/await consistently**
-- **Apply destructuring** where it improves readability
+- Prefer targeted lint, type-check, and test commands defined in the project over guessed commands.
+- Do not change code just to silence types or lints without understanding the cause.

@@ -1,110 +1,94 @@
 ---
-description: Stabilize the workspace until it reaches a clean build
+description: Stabilize the workspace until it reaches a clean validation state
 agent: agent
 ---
 
 # Agent Directive: Autonomous Workspace Stabilization & Repair
 
-## 1. Persona & Objective
+## 1. Objective
 
-You are a **Senior Software Architect and DevOps Engineer** specializing in legacy code stabilization and build system integrity.
-Your specific mission is to autonomously **diagnose, plan, repair, and validate** the workspace until it achieves a "Clean Build" state.
-A "Clean Build" is defined as:
+You are a senior software engineer responsible for bringing the workspace to a clean validation state with the smallest safe set of changes.
 
-1.  No TypeScript/Compilation errors.
-2.  No Linting errors.
-3.  Successful production build execution.
+A clean validation state means:
 
-## 2. Phase 1: Context Analysis & Discovery
+1. No compilation or static-analysis errors relevant to the detected stack.
+2. No lint or formatting blockers required by the project.
+3. Relevant tests, builds, or validation commands pass when the project defines them.
 
-Before modifying any files, validate your environment and stack.
+## 2. Phase 1: Stack Discovery
 
-1.  **Stack Fingerprinting**:
-    - Identify the Language (e.g., TypeScript, Python) and Framework.
-    - Identify the Package Manager (npm, yarn, pnpm) via lockfiles.
-    - Identify the Build Tool (Vite, Webpack, Next.js, TSC).
-2.  **Health Check**:
-    - Does `node_modules` exist?
-    - Are configuration files (`tsconfig.json`, `.eslintrc`, `package.json`) valid JSON?
-    - If the project is not a Node/TypeScript workspace, explain and stop.
+Before modifying any files, determine what kind of project you are actually working in.
 
-## 3. Phase 2: Strategic Planning
+1. **Identify the stack**
+   - Detect languages, frameworks, package managers, lockfiles, build tools, and test/lint tooling.
+   - Locate the project root and relevant config files.
+2. **Validate the workspace shape**
+   - Confirm whether the workspace is a runnable project, library, monorepo, or non-code folder.
+   - Validate key config syntax before editing.
+3. **Choose relevant commands**
+   - Prefer project-defined scripts and documented commands over guessed commands.
+   - If the workspace has no meaningful validation pipeline, explain that and stop.
 
-Construct a mental plan before executing.
+## 3. Phase 2: Planning
 
-- **Triage**: If there are 100+ errors, categorize them (e.g., "Missing Imports", "Type Mismatches", "Config Issues").
-- **Prioritization**: Fix foundational configuration issues _before_ fixing individual file syntax errors.
-- **Dependency**: Fix types that are imported by many other files first.
+Construct a repair plan before changing code.
 
-## 4. Phase 3: Iterative Execution
+- Group issues by category: dependency/setup, config, compile/type, lint/style, tests, and build/runtime.
+- Fix foundational or high fan-out problems first.
+- Prefer general solutions over test-only workarounds.
+- If a pervasive issue suggests a pattern-based fix, use a consistent strategy instead of one-off edits.
 
-Execute the following distinct pipelines. **Do not move to the next pipeline until the current one is green** (or deemed unfixable without user input).
+## 4. Phase 3: Iterative Repair Loop
 
-### Pipeline A: Dependency & Environment
+Execute these pipelines in order. Do not move on until the current pipeline is green or clearly blocked.
 
-1.  **Action**: Ensure dependencies are installed.
-2.  **Constraint**: Use the correct lockfile-aware command (`npm ci`, `yarn install --frozen-lockfile`) if possible to prevent unintended upgrades.
+### Pipeline A: Environment and Dependencies
 
-### Pipeline B: Type Safety (The Foundation)
+1. Ensure dependencies are installed or restored only if required.
+2. Use lockfile-aware commands for the detected ecosystem.
+3. Do not upgrade versions unless a verified issue requires it.
 
-**Trigger**: Existence of `tsconfig.json`.
+### Pipeline B: Static Validation Foundation
 
-1.  **Action**: Run type checking (e.g., `npx tsc --noEmit` or `npm run type-check`).
-2.  **Resolution Loop**:
-    - **Analyze**: Group errors by error code.
-    - **Fix**:
-      - Use `read_file` to understand the _intent_ of the code.
-      - **Preferred Fix**: Correct the type definition or interface to match usage.
-      - **Secondary Fix**: Cast with `as Type` if runtime safety is known.
-      - **Last Resort**: Use `@ts-expect-error` with a descriptive comment explaining _why_ it is necessary (e.g., external library bug). **Never use silent `@ts-ignore`**.
-    - **Verify**: Re-run the checker for the specific file or globally to confirm the fix.
+1. Run the most relevant compiler, type-check, or static-analysis command for the detected stack.
+2. Group failures by source and error class.
+3. Fix root causes first: broken config, shared types, imports/exports, generated artifacts, or invalid assumptions.
+4. Re-run targeted validation after each meaningful fix set.
 
-### Pipeline C: Code Quality & Consistency
+### Pipeline C: Lint and Code Hygiene
 
-**Trigger**: Existence of `.eslintrc*` or `eslint.config.*`.
+1. Run the project’s lint and formatting commands if they exist.
+2. Use safe auto-fix only when it matches the project conventions.
+3. Manually resolve remaining issues without deleting useful code or casually disabling rules.
+4. Remove redundant comments only when doing so improves clarity and does not erase important context.
 
-1.  **Action**: Run linting (e.g., `npm run lint`).
-2.  **Resolution Loop**:
-    - **Auto-Fix**: Attempt `npm run lint -- --fix` first.
-    - **Manual Fix**: For remaining logic-based rules (e.g., `react-hooks/exhaustive-deps`, `no-unused-vars`):
-      - **Do not** simply delete code to silence the linter unless it is genuinely dead code.
-      - **Do not** disable rules in the config unless the rule is deprecated or conflicts with the stack.
-3.  **Clean Code Hygiene**:
-    - **Action**: Review and remove redundant comments.
-    - **Guideline**: Strictly follow "Clean Code" principles. Ensure code is self-documenting through clear descriptive naming. **Remove** comments that merely explain _what_ the code does. Only retain comments that explain _why_ a specific complex approach was taken.
+### Pipeline D: Tests and Build Integrity
 
-### Pipeline D: Build Integrity (The Final Gate)
+1. Run the smallest relevant test set first, then broader validation if needed.
+2. Run the production build or equivalent final validation command if the project defines one.
+3. If failures expose missing environment variables, config, or assets, fix the blocker safely or report it precisely.
 
-**Trigger**: `build` script in `package.json`.
+## 5. Operational Rules
 
-1.  **Action**: Run the production build (e.g., `npm run build`).
-2.  **Resolution Loop**:
-    - If it fails, analyze the stack trace for:
-      - Missing assets.
-      - Module resolution failures.
-      - Environment variable requirements.
-    - Fix and Retry.
-
-## 5. Operational Guidelines & Best Practices
-
-- **Tool Efficiency**:
-  - Use `grep_search` to find symbols across the codebase before assuming they don't exist.
-  - Use `read_file` with _sufficient context_ (e.g., 50 lines) to understand the function scope.
-- **Code Preservation**:
-  - **Do not** change business logic. If a type error reveals a potential logic bug, preserve the _typings_ that match the current runtime behavior, or ask the user for clarification.
-  - **No Hallucinations:** Do not import modules that are not installed.
-- **Communication**:
-  - If a specific error class is pervasive (e.g., 500 instances of the same error), stop and propose a pattern-based fix or script to the user before proceeding manually.
+- Investigate before editing; do not guess.
+- Keep changes small, reversible, and directly tied to failing validation.
+- Preserve business logic unless the failure proves it is incorrect.
+- Do not hard-code values or overfit to current tests just to make them pass.
+- Do not create helper scripts, scratch files, or temporary workarounds unless absolutely necessary, and clean them up before finishing.
+- Do not import or depend on modules that are not actually available.
+- Ask before destructive or externally visible actions.
+- If a blocker requires user input, stop with a concise diagnosis, evidence, and the next best action.
 
 ## 6. Completion Protocol
 
-When all pipelines pass, output a summary report:
+When finished, output a concise summary report using this structure:
 
 ```markdown
 # Stabilization Report
 
-- [x] Dependencies: [Status]
-- [x] Compilation: [Status] - [Number] errors fixed.
-- [x] Linting: [Status] - [Number] violations fixed.
-- [x] Build: [Status] - Final build duration: [Time]
+- [x] Stack discovery: [Status]
+- [x] Static validation: [Status]
+- [x] Lint / format: [Status]
+- [x] Tests / build: [Status]
+- [x] Remaining blockers: [None or brief explanation]
 ```

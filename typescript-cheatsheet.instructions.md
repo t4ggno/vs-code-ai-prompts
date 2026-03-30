@@ -4,6 +4,8 @@ applyTo: "**"
 
 # Modern TypeScript Cheatsheet (2026)
 
+Use these examples as patterns, but always match the local codebase conventions and project-specific instructions first.
+
 ## Type System Essentials
 
 ### Modern Type Definitions
@@ -52,7 +54,7 @@ function padLeft(padding: number | string, input: string): string {
 type Fish = { swim: () => void };
 type Bird = { fly: () => void };
 
-function move(animal: Fish | Bird) {
+function move(animal: Fish | Bird): void {
   if ("swim" in animal) {
     animal.swim();
     return;
@@ -94,7 +96,7 @@ function assertIsString(value: unknown): asserts value is string {
   }
 }
 
-function shout(value: unknown) {
+function shout(value: unknown): string {
   assertIsString(value);
   return value.toUpperCase();
 }
@@ -138,7 +140,8 @@ const isString = (value: unknown): value is string => typeof value === "string";
 const { id, name, ...rest } = user;
 
 // ✅ Object.entries with proper typing
-Object.entries(obj as Record<string, unknown>).forEach(([key, value]) => {});
+for (const [key, value] of Object.entries(obj as Record<string, unknown>)) {
+}
 
 // ✅ Array methods with type inference
 const ids = users.map(({ id }) => id);
@@ -233,7 +236,7 @@ any, Function, Object, {}, unknown without narrowing
 
 // ⚠️ Prefer unions for simple value sets
 // Enums can be useful for bitflags or interop with external APIs
-enum Status { Ready, Busy }
+enum BusyState { Ready, Busy }
 
 // ❌ Avoid runtime type checking for known types
 if (typeof data === 'object') // when type is already known
@@ -261,3 +264,4 @@ type Simple<T> = T extends A & B ? C : T extends A ? D : E;
 - Add explicit return types on public APIs to reduce inference cost
 - Name complex conditional/mapped types to improve reuse and readability
 - Prefer base types + subtypes over huge unions when modeling large domains
+- Prefer `for...of` over `forEach` when early exit or hot-path performance matters

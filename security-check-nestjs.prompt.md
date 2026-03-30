@@ -7,6 +7,10 @@ agent: agent
 
 Perform a thorough security sanity check of the NestJS codebase. Confirm that security coverage is complete, edge cases are handled, and nothing sensitive is exposed.
 
+If the workspace does not appear to contain a NestJS application, explain that clearly and stop.
+
+Only report **confirmed** findings as findings. If a control cannot be verified from code, configuration, or available tool output, mark it as **unverified**, an **assumption**, or an **open question** instead of treating it as a failure.
+
 Use these NestJS‑specific and general references as guidance:
 
 - NestJS docs: Controllers, Pipes/Validation, Guards, Authentication, Authorization, Exception Filters, Interceptors, Middleware.
@@ -118,6 +122,9 @@ Provide results in this order:
 
 - Do not modify code unless explicitly instructed; report issues and fixes instead.
 - Be exhaustive and systematic. No high‑risk NestJS area can be skipped.
+- Do not report speculative issues as confirmed vulnerabilities.
+- Distinguish confirmed findings from general hardening suggestions.
+- If a risk depends on infrastructure or deployment details outside the repository, list it under **Assumptions & Open Questions** or **Unreviewed Areas**.
 
 ## Success Criteria
 

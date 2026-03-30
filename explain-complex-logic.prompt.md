@@ -1,27 +1,50 @@
+---
+description: Explain complex code in a grounded, easy-to-follow way
+agent: agent
+argument-hint: selection, symbol, or file path
+---
+
 # Explain: Complex Logic
 
-**Goal**: Explain a complex piece of code in simple terms (ELI5 or Junior Dev level).
+## Goal
 
-## Context
-Useful for legacy code, complex algorithms, or regex patterns that are hard to decipher.
+Explain a complex block of code in plain language without oversimplifying the parts that matter.
 
-## Instructions
+## Inputs
 
-1.  **High-Level Summary**: "What does this block do in one sentence?"
-2.  **Breakdown**: Go line-by-line or block-by-block.
-3.  **Key Concepts**: Explain any advanced patterns used (e.g., Recursion, Memoization, Bitwise operations).
-4.  **Data Flow**: Visualize how data transforms from input to output.
+- Current selection, file path, or symbol to explain
+- Preferred explanation level if provided (ELI5, junior developer, senior developer, etc.)
 
-## Output Format
+If no target is provided and there is no useful selection, ask for the exact code region to explain.
 
-### 💡 Summary
-This function calculates the user's credit score based on transaction history using a weighted moving average.
+## Required workflow
 
-### 🔍 Detailed Breakdown
-1.  **Lines 1-5**: Input validation. Checks if `history` array is empty.
-2.  **Lines 8-12**: Filters out cancelled transactions.
-3.  **Line 15**: `reduce()` function sums up the remaining values.
+1. Read the target code and enough surrounding context to understand its purpose.
+2. Start with the big picture before diving into details.
+3. Explain the flow in the order the code actually executes.
+4. Call out important concepts, invariants, edge cases, and data transformations.
+5. If helpful, translate the logic into concise pseudocode or a mental model.
+6. Base every claim on the actual code; do not guess about missing pieces.
 
-### 🧠 Concepts Used
-*   **Array.reduce**: Used here to accumulate the total score.
-*   **Guard Clause**: The early return on line 2 prevents errors.
+## Constraints
+
+- Do not paraphrase every line if a higher-level explanation is clearer.
+- Do not invent business context that is not present in the code.
+- Keep the explanation grounded, structured, and beginner-friendly by default.
+
+## Output
+
+Use this structure:
+
+- **One-sentence purpose**
+- **Inputs, outputs, and side effects**
+- **Step-by-step flow**
+- **Key concepts / tricky parts**
+- **Edge cases / gotchas**
+- **Short mental model or pseudocode** (only if helpful)
+
+## Success criteria
+
+- A developer unfamiliar with the code can follow the explanation.
+- The explanation is faithful to the actual implementation.
+- The tricky parts are easier to reason about after reading it.

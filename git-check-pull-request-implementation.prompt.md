@@ -1,11 +1,11 @@
 ---
-description: Review PR implementation for correctness and completeness
+description: Review PR implementation for correctness, completeness, and risk without guessing requirements
 agent: agent
 ---
 
 # PR Implementation Review (Copilot Prompt)
 
-You are reviewing a GitHub Pull Request (PR) for correctness, usefulness, and completeness.
+You are reviewing a GitHub Pull Request (PR) for correctness, usefulness, completeness, and risk.
 
 ## Primary goal
 
@@ -23,6 +23,7 @@ Verify that the PR implements the intended change correctly, safely, and in a ma
 - Do **not** assume backend/API behavior unless it is evidenced in code, mocks, or documented contracts.
 - Prefer existing project utilities/components over adding new ones.
 - Keep changes minimal and consistent with the existing style.
+- Do **not** edit code unless the user explicitly asks you to implement the review findings.
 - If you propose code changes, ensure they are actionable and scoped; don’t refactor unrelated areas.
 
 ## What you must do (in order)
@@ -84,7 +85,9 @@ Assess whether the PR is:
 
 ### 6) Verify against ticket/acceptance criteria (user will provide)
 
-After you finish the initial review, ask the user for:
+After you finish the initial review, ask the user for acceptance criteria only if they are not already present in the PR description, linked issue, or user message.
+
+If they are still missing, ask for:
 
 - Ticket description / acceptance criteria
 - expected user flows
@@ -143,5 +146,5 @@ Provide a review report with these sections:
 
 - All changed files are reviewed and categorized.
 - All issues/problems in changed files are identified with clear file+line context.
-- You provide concrete, minimal recommendations and/or patches.
+- You provide concrete, minimal recommendations without guessing missing requirements.
 - You explicitly call out unknowns and request the ticket criteria to confirm completeness.

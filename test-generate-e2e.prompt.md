@@ -1,41 +1,61 @@
-# Test: Generate End-to-End Tests (Playwright/Cypress)
+---
+description: Generate stable end-to-end tests for a real user workflow
+agent: agent
+argument-hint: scenario or target feature path
+---
 
-**Goal**: Create user-centric E2E tests to verify full workflows in the browser.
+# Test: Generate End-to-End Tests
 
-## Context
-E2E tests ensure the application works from the user's perspective. Focus on user interactions (clicks, typing) and visible outcomes.
+## Goal
 
-## Instructions
+Create reliable end-to-end tests that verify a complete user workflow through the UI using the project’s existing E2E framework.
 
-1.  **Define the Scenario**: logical flow (e.g., "User logs in and updates profile").
-2.  **Select Locators**:
-    *   Prioritize user-facing attributes: `getByRole`, `getByText`, `getByLabel`.
-    *   Avoid brittle selectors like XPaths or CSS classes (`.div > .btn`).
-    *   Use `data-testid` only as a last resort.
-3.  **Write the Test**:
-    *   Navigate to the page.
-    *   Perform actions (fill forms, click buttons).
-    *   Assert visibility of success messages or page transitions.
-4.  **Handle Async**: Ensure `await` is used correctly for all interactions.
+## Inputs
 
-## Output Format (Playwright Example)
+- Target feature, route, or user workflow
+- Existing E2E framework and conventions if known
+- Any required seed data, auth state, fixtures, or environment assumptions
 
-```typescript
-import { test, expect } from '@playwright/test';
+If the workflow is unclear, ask for the exact user journey rather than inventing one.
 
-test.describe('Feature Name', () => {
-  test('User can complete the primary workflow', async ({ page }) => {
-    // 1. Navigate
-    await page.goto('/login');
+## Required workflow
 
-    // 2. Interact
-    await page.getByLabel('Email').fill('user@example.com');
-    await page.getByLabel('Password').fill('password123');
-    await page.getByRole('button', { name: 'Sign In' }).click();
+1. Inspect the existing E2E setup, test style, helpers, fixtures, and naming conventions before writing tests.
+2. Prefer the project’s current framework and folder structure:
+   - Playwright if the workspace uses Playwright
+   - Cypress if the workspace uses Cypress
+3. Write tests around real user behavior, not implementation details.
+4. Use stable locators in this order of preference:
+   - accessible queries (`getByRole`, `getByLabel`, `getByText`)
+   - existing semantic test helpers
+   - `data-testid` only when necessary
+5. Cover the primary success path and the most meaningful failure or edge state for the workflow.
+6. Make the test deterministic:
+   - avoid arbitrary sleeps
+   - wait on user-visible state changes
+   - use existing auth or seed helpers instead of hand-rolled setup
+7. Verify the test against the existing suite conventions and note any environment prerequisites.
 
-    // 3. Assert
-    await expect(page.getByText('Welcome back')).toBeVisible();
-    await expect(page).toHaveURL('/dashboard');
-  });
-});
-```
+## Constraints
+
+- Do not use brittle selectors such as CSS chains or XPath unless the project already depends on them and no stable alternative exists.
+- Do not assert internal implementation details.
+- Do not invent routes, copy, or UI states not supported by the code.
+- Do not add a new E2E framework if the project already has one.
+- Keep tests focused on the workflow, not exhaustive UI coverage.
+
+## Output
+
+Use this structure:
+
+- **Workflow covered**
+- **Test files created or updated**
+- **Key assertions**
+- **Environment assumptions**
+- **Verification**
+
+## Success criteria
+
+- The test reflects a real user journey.
+- The selectors and waits are stable and maintainable.
+- The test fits the project’s existing E2E setup.

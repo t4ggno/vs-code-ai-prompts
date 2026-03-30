@@ -1,66 +1,55 @@
-# Docs: Generate JSDoc/TSDoc Comments
+---
+description: Add accurate JSDoc or TSDoc comments to existing code without changing behavior
+agent: agent
+argument-hint: selection, symbol, or file path
+---
 
-**Goal**: Add comprehensive, standard-compliant JSDoc/TSDoc comments to functions, classes, and interfaces.
+# Docs: Generate JSDoc or TSDoc
 
-## Context
-Clear documentation is essential for maintainability and IDE support. This prompt guides the AI to add documentation that explains *why* code exists, not just *what* it does.
+## Goal
 
-## Instructions
+Add or improve documentation comments that explain intent, contracts, side effects, and important constraints without changing implementation behavior.
 
-1.  **Analyze the Selection**: Read the selected code to understand its purpose, parameters, return values, and side effects.
-2.  **Generate Documentation**: Create JSDoc/TSDoc comments for:
-    *   Classes: Description of responsibility.
-    *   Methods/Functions: Description, `@param`, `@returns`, `@throws`, and `@example`.
-    *   Interfaces/Types: Description of the data structure.
-3.  **Adhere to Standards**:
-    *   Use Markdown for formatting within comments.
-    *   Do not state the obvious (e.g., "Returns string" for a function named `getString`). Focus on business logic or constraints.
-    *   Include `@deprecated` if applicable.
-4.  **Preserve Code**: Do not modify the actual code implementation, only add/update comments.
+## Inputs
 
-## Output Format
+- Target file, symbol, or current selection
+- Language and context (TypeScript, JavaScript, React, NestJS, etc.)
+- Any domain rules the comments must reflect
 
-```typescript
-/**
- * [Short description of what the function does]
- *
- * [Optional: Detailed explanation or context]
- *
- * @param {Type} paramName - [Description of the parameter]
- * @returns {Type} [Description of the return value]
- * @throws {ErrorType} [Condition that causes the error]
- *
- * @example
- * // [Description of example]
- * const result = functionName(arg);
- */
-export function functionName(paramName: Type): Type {
-    // ...
-}
-```
+If no target is given and there is no useful current selection, ask for the exact file or symbol to document.
 
-## Example Usage
+## Required workflow
 
-**Input:**
-```typescript
-function calculateTax(amount: number, region: string) {
-  // ...
-}
-```
+1. Read the target code and enough surrounding context to understand what it actually does.
+2. Document only behavior that is supported by the code or explicit user context.
+3. Add or update comments only where they add value:
+   - exported functions, classes, hooks, and types
+   - complex internal helpers with non-obvious behavior
+   - constraints, invariants, or side effects that are easy to miss
+4. Use the most appropriate style for the file:
+   - TSDoc for TypeScript APIs
+   - JSDoc for JavaScript or mixed files
+5. Include tags only when they are true and useful (`@param`, `@returns`, `@throws`, `@example`, `@deprecated`, etc.).
+6. Preserve the code logic exactly; change comments only unless a tiny signature alignment is required for documentation accuracy.
 
-**Output:**
-```typescript
-/**
- * Calculates the total tax for a transaction based on the region's tax rate.
- *
- * Handles special tax exemptions for non-profit regions.
- *
- * @param {number} amount - The base transaction amount in cents.
- * @param {string} region - The ISO 3166-2 region code (e.g., 'US-NY').
- * @returns {number} The calculated tax amount, rounded to the nearest cent.
- * @throws {InvalidRegionError} If the region code is not supported.
- */
-function calculateTax(amount: number, region: string) {
-  // ...
-}
-```
+## Constraints
+
+- Do not invent behavior, exceptions, or examples.
+- Do not restate the obvious line by line.
+- Do not change runtime logic to make the docs look cleaner.
+- Keep comments concise, accurate, and maintainable.
+
+## Output
+
+Use this structure:
+
+- **Scope documented**
+- **Comments added or updated**
+- **Files changed**
+- **Notes**: ambiguity, assumptions, or APIs that still need domain clarification
+
+## Success criteria
+
+- Comments explain intent and constraints, not just syntax.
+- Documentation matches the real code.
+- No implementation behavior is changed accidentally.

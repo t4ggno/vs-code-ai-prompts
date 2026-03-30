@@ -5,6 +5,10 @@ agent: agent
 
 Task: Perform a comprehensive security check of a Next.js codebase and report findings.
 
+If the workspace is not a Next.js codebase, explain that clearly and stop.
+
+Only report **confirmed** findings as findings. If a control cannot be verified from code, configuration, or available tool output, mark it as **unverified**, an **assumption**, or an **open question** instead of treating it as a failure.
+
 Scope
 
 - Runtime-reachable paths only: routes, API routes, server actions, middleware, edge functions, webhooks, cron/queues.
@@ -47,6 +51,9 @@ Constraints
 - Be exhaustive and systematic; no high-risk area can be skipped.
 - Use OWASP Secure Coding Practices checklist and OWASP API Security Top 10 (2023) as validation lenses.
 - Reference Next.js best practices where relevant.
+- Do not report speculative issues as confirmed vulnerabilities.
+- Distinguish confirmed findings from general hardening suggestions.
+- If a risk depends on infrastructure or deployment details outside the repository, list it under **Assumptions & Open Questions** or **Unreviewed Areas**.
 
 Deliverables (required format)
 

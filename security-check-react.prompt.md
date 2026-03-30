@@ -7,6 +7,10 @@ agent: agent
 
 Perform a thorough security sanity check of the React application. Confirm that security coverage is complete, edge cases are handled, and nothing sensitive is exposed.
 
+If the workspace does not appear to contain a React application, explain that clearly and stop.
+
+Only report **confirmed** findings as findings. If a control cannot be verified from code, configuration, or available tool output, mark it as **unverified**, an **assumption**, or an **open question** instead of treating it as a failure.
+
 Use these best‑practice references as guidance:
 
 - OWASP XSS Prevention Cheat Sheet (React escape hatches, safe sinks, DOM sanitization).
@@ -109,6 +113,9 @@ Provide results in this order:
 
 - Do not modify code unless explicitly instructed; report issues and fixes instead.
 - Be exhaustive and systematic. No high‑risk React area can be skipped.
+- Do not report speculative issues as confirmed vulnerabilities.
+- Distinguish confirmed findings from general hardening suggestions.
+- If a risk depends on infrastructure or deployment details outside the repository, list it under **Assumptions & Open Questions** or **Unreviewed Areas**.
 
 ## Success Criteria
 

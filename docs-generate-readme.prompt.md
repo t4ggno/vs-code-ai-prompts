@@ -1,76 +1,55 @@
-# Docs: Generate README Section
+---
+description: Generate or update README content grounded in the actual code
+agent: agent
+argument-hint: module path, component path, or current selection
+---
 
-**Goal**: Create a high-quality, informative README section for a module, component, or project.
+# Docs: Generate README Content
 
-## Context
-A good README serves as the entry point for other developers. It should answer "What is this?", "Why should I use it?", and "How do I use it?".
+## Goal
 
-## Instructions
+Create a clear README section or README update that accurately explains what the selected module, component, or project does and how to use it.
 
-1.  **Analyze Context**: Read the provided file(s) or folder structure to understand the module's purpose.
-2.  **Structure the Content**:
-    *   **Title**: Clear and descriptive.
-    *   **Description**: One-paragraph summary of functionality.
-    *   **Features**: Bulleted list of key capabilities.
-    *   **Installation/Usage**: Code blocks showing how to import and use it.
-    *   **API / Props**: detailed table or list of arguments/props.
-    *   **Notes**: Any caveats, constraints, or dependencies.
-3.  **Use Markdown Best Practices**:
-    *   Use correct header levels (`##` for sections).
-    *   Use syntax highlighting for code blocks (e.g., ````typescript`).
-    *   Keep it concise but complete.
+## Inputs
 
-## Output Format
+- Target module, folder, component, or project
+- Existing README or template to extend, if present
+- Any audience or context constraints (internal team, library users, API consumers, etc.)
 
-```markdown
-## [Module Name]
+If the requested scope is unclear, ask for the exact target rather than inventing documentation scope.
 
-[Concise description of the module]
+## Required workflow
 
-### Features
-- [Feature 1]
-- [Feature 2]
+1. Inspect the target code, exports, configuration, and neighboring docs before writing.
+2. If an existing README or template exists, match its tone, heading depth, and structure.
+3. Document only what is evidenced in code or explicitly provided by the user.
+4. Prioritize the information developers actually need:
+   - purpose
+   - when to use it
+   - key inputs, props, or configuration
+   - minimal usage example
+   - caveats or constraints
+5. If the user asked to update files, edit the README directly. If the user asked only for draft content, provide the markdown draft.
 
-### Usage
+## Constraints
 
-```typescript
-import { Module } from './path';
+- Do not invent installation steps, scripts, props, environment variables, or behavior.
+- Keep the documentation concise and skimmable.
+- Use code blocks only for real usage examples.
+- Do not overwrite unrelated README sections.
 
-const instance = new Module();
-```
+## Output
 
-### Props / Configuration
+Use this structure:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| name | string | - | The name of the item |
+- **Documentation target**
+- **Section outline**
+- **Content created or updated**
+- **Files changed**
+- **Open questions / missing facts**
 
-```
+## Success criteria
 
-## Example Usage
-
-**Request:** "Generate a README docs for `src/components/Button.tsx`"
-
-**Output:**
-```markdown
-## Button Component
-
-A strict, accessible button component that adheres to the design system. Supports various variants (primary, secondary) and sizes.
-
-### Usage
-
-```tsx
-import { Button } from '@/components/Button';
-
-<Button variant="primary" onClick={handleClick}>
-  Submit
-</Button>
-```
-
-### Props
-
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| variant | `'primary' | 'secondary'` | `'primary'` | Visual style of the button |
-| onClick | `() => void` | - | Click handler |
-```
+- The README content is accurate, concise, and directly usable.
+- A developer can understand what the target is, why it exists, and how to use it.
+- The content matches the codebase’s documentation style.

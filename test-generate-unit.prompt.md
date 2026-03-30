@@ -1,58 +1,57 @@
-# Test: Generate Unit Tests (Jest/Vitest)
+---
+description: Generate focused unit tests for a defined source file or symbol
+agent: agent
+argument-hint: source file, symbol, or current selection
+---
 
-**Goal**: Create comprehensive unit tests for a specific file, covering happy paths, edge cases, and error states.
+# Test: Generate Unit Tests
 
-## Context
-Robust unit tests prevent regression. This prompt guides the generation of tests that verify behavior, not just implementation details.
+## Goal
 
-## Instructions
+Create behavior-focused unit tests for a specific file or symbol, covering happy paths, meaningful edge cases, and failure handling.
 
-1.  **Analyze the Source File**: Understand imports, exported functions, and dependencies.
-2.  **Plan Test Cases**:
-    *   **Happy Path**: Verify standard usage returns expected results.
-    *   **Edge Cases**: Test empty inputs, `null`, `undefined`, boundary numbers (0, -1, MaxInt).
-    *   **Error Handling**: Verify that errors are thrown or caught as expected.
-3.  **Mock Dependencies**:
-    *   Use `jest.mock()` or `vi.mock()` for external modules.
-    *   Mock database calls, API requests, and standard I/O.
-4.  **Write Tests**:
-    *   Use `describe()` blocks to group tests by function/class.
-    *   Use `it()` or `test()` for individual cases with descriptive names.
-    *   Use `expect()` assertions.
-    *   Follow the **AAA** pattern: **Arrange** (setup), **Act** (execute), **Assert** (verify).
+## Inputs
+
+- Target source file, symbol, or current selection
+- Existing test runner and conventions if known
+- Any important domain rules or invariants
+
+If no target is provided and there is no useful selection, ask for the exact file or symbol to test.
+
+## Required workflow
+
+1. Inspect the source file, its exported APIs, and neighboring tests before writing anything.
+2. Determine the project’s existing test stack and conventions (Vitest, Jest, etc.) and follow them.
+3. Define a compact test matrix:
+   - expected behavior
+   - edge cases
+   - invalid input or error paths
+   - observable side effects
+4. Mock only true external boundaries such as network, filesystem, database, or time when needed.
+5. Prefer clear arrange-act-assert structure and use table-driven tests when several cases share the same logic.
+6. Keep tests deterministic, isolated, and readable.
+7. Verify that the tests exercise behavior rather than duplicating implementation details.
 
 ## Constraints
-- Do not test trivial implementation details (e.g., "it should assign a variable").
-- Ensure all mocks are cleared/restored (`beforeEach`).
-- Use table-driven tests (`test.each`) for repetitive cases.
 
-## Output Format
+- Do not test trivial assignments or framework internals.
+- Do not invent behavior not present in the code.
+- Do not over-mock internal logic that should be exercised directly.
+- Restore or clear mocks consistently.
+- Follow existing test file naming and placement conventions.
 
-```typescript
-import { functionName } from './source-file';
-import { dependency } from './dependency';
+## Output
 
-vi.mock('./dependency');
+Use this structure:
 
-describe('functionName', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+- **Target under test**
+- **Scenarios covered**
+- **Test files created or updated**
+- **Mocks and assumptions**
+- **Verification**
 
-  it('should return result for valid input', () => {
-    // Arrange
-    vi.mocked(dependency).mockReturnValue(true);
-    
-    // Act
-    const result = functionName('input');
+## Success criteria
 
-    // Assert
-    expect(result).toBe('success');
-    expect(dependency).toHaveBeenCalledWith('input');
-  });
-
-  it('should throw error for invalid input', () => {
-    expect(() => functionName('')).toThrow('Invalid input');
-  });
-});
-```
+- The tests cover meaningful behavior and edge cases.
+- The tests are deterministic and aligned with existing project patterns.
+- The test suite becomes more useful, not noisier.
