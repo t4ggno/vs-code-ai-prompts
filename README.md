@@ -1,17 +1,21 @@
 # VS Code AI Prompts
 
-A curated prompt library for GitHub Copilot in VS Code. This repository contains reusable `*.prompt.md` and `*.instructions.md` files for common engineering workflows such as debugging, refactoring, documentation, testing, security reviews, and pull request preparation.
+A curated prompt library for GitHub Copilot in VS Code. This repository contains reusable `*.prompt.md` and `*.instructions.md` files for common engineering workflows such as debugging, refactoring, documentation, testing, security reviews, pull request preparation, and VS Code Copilot customization work.
 
 The goal is simple: make prompt-driven work more consistent, more evidence-based, and less dependent on repeating the same setup instructions in every chat.
 
 ## What this repository contains
 
-- **Task prompts** for focused workflows such as fixing code, reviewing pull requests, generating tests, or improving a UI.
+- **Prompt files** for focused workflows such as fixing code, reviewing pull requests, generating tests, improving a UI, splitting stacked PRs, or authoring VS Code Copilot customizations.
 - **Shared instruction files** that define baseline coding behavior and TypeScript-specific expectations.
 - **Prompt templates with structure**: the prompt files typically include a clear goal, expected inputs, required workflow steps, constraints, output expectations, and success criteria.
-- **Scope-aware guidance**: many prompts are designed to stay within the current file, selection, view, or explicitly provided target instead of encouraging broad changes.
+- **Scope-aware guidance**: many prompts are designed to stay within the current file, selection, view, current diff, or explicitly provided target instead of encouraging broad changes.
+- **Git-aware workflows**: some prompts intentionally operate on the current uncommitted diff or on changes since the branch diverged from its base.
+- **VS Code customization helpers**: several prompts help create or improve prompt files, custom agents, and skills using current platform conventions.
 
 ## Prompt categories
+
+The categories below list every current `*.prompt.md` file in the repository.
 
 ### Debugging and repair
 
@@ -19,14 +23,19 @@ The goal is simple: make prompt-driven work more consistent, more evidence-based
 - `fix-code-general.prompt.md` — Stabilize a workspace until it reaches a clean validation state.
 - `fix-nestjs-controller.prompt.md` — Fix a NestJS controller issue with the smallest safe change.
 
-### Refactoring, design, and explanation
+### Refactoring and code improvement
+
+- `refactor-code.prompt.md` — Refactor a defined scope for clarity, maintainability, and safe performance wins.
+- `refactor-code-since-base.prompt.md` — Refactor only the changes introduced by the current branch since it diverged from its base branch.
+- `refactor-code-uncommitted.prompt.md` — Refactor only the current uncommitted working-tree and index changes.
+- `refactor-component.prompt.md` — Improve a component with clearer structure, accurate docs, and logic-focused tests.
+- `refactor-user-interface.prompt.md` — Improve a UI surface with clear, codebase-aligned UX refinements.
+
+### Design, scaffolding, explanation, and guides
 
 - `design-scaffold-feature.prompt.md` — Design a feature and scaffold the minimal file structure needed to implement it.
 - `explain-complex-logic.prompt.md` — Explain complex code in a grounded, easy-to-follow way.
 - `guide-web-development.prompt.md` — General web-development implementation prompt with evidence-based workflows.
-- `refactor-code.prompt.md` — Refactor a defined scope for clarity, maintainability, and safe performance wins.
-- `refactor-component.prompt.md` — Improve a component with clearer structure, accurate docs, and logic-focused tests.
-- `refactor-user-interface.prompt.md` — Improve a UI surface with clear, codebase-aligned UX refinements.
 
 ### Documentation
 
@@ -40,6 +49,7 @@ The goal is simple: make prompt-driven work more consistent, more evidence-based
 - `git-commit.prompt.md` — Stage relevant changes, create a clean Gitmoji commit, and push safely.
 - `git-commit-typescript.prompt.md` — Run TypeScript quality gates, then commit and push safely.
 - `git-create-pull-request.prompt.md` — Create or update a pull request from the current branch using the repository template.
+- `git-create-stacked-pull-requests.prompt.md` — Validate a working branch, split it into meaningful stacked branches, and create draft pull requests for the stack.
 - `git-write-pull-request-description.prompt.md` — Generate a concise, ready-to-paste PR description from the current branch changes.
 
 ### Security review
@@ -53,6 +63,12 @@ The goal is simple: make prompt-driven work more consistent, more evidence-based
 
 - `test-generate-e2e.prompt.md` — Generate stable end-to-end tests for a real user workflow.
 - `test-generate-unit.prompt.md` — Generate focused unit tests for a defined source file or symbol.
+
+### VS Code customization helpers
+
+- `vscode-agents.prompt.md` — Create or improve Copilot custom agent files using current VS Code conventions and least-privilege tool guidance.
+- `vscode-prompt.prompt.md` — Create or improve reusable Copilot prompt files using local library patterns and current best practices.
+- `vscode-skill.prompt.md` — Create or improve Copilot Agent Skills and `SKILL.md` files with clear discovery and workflow guidance.
 
 ## Instruction files
 
@@ -73,9 +89,8 @@ Across the repository, the prompt files follow a few common principles:
 ## Usage
 
 1. Copy the files into your VS Code prompts directory:
-
-	- Windows: `%appdata%\Code\User\prompts`
-	- Windows (Insiders): `%appdata%\Code - Insiders\User\prompts`
+   - Windows: `%appdata%\Code\User\prompts`
+   - Windows (Insiders): `%appdata%\Code - Insiders\User\prompts`
 
 2. Open the prompt picker or reference the files from your Copilot configuration.
 3. Choose the prompt that matches the task and provide a target scope when needed, such as a file, symbol, current selection, or view.
@@ -90,6 +105,8 @@ This repository is a good fit if you want to:
 - reduce back-and-forth for common workflows,
 - keep prompts focused on small, verifiable changes,
 - maintain separate prompts for general, TypeScript, React, Next.js, and NestJS scenarios,
+- support Git-aware refactoring flows such as “only uncommitted changes” or “only since base branch”,
+- author or improve VS Code prompt files, custom agents, and skills using the same library,
 - build a prompt library that teammates can reuse and extend.
 
 ## Notes
