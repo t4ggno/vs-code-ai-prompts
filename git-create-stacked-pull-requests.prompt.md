@@ -9,15 +9,18 @@ agent: agent
 
 Validate the current codebase, back up the current working tree in a stash, then split the work into a small, meaningful stack of commits and draft pull requests.
 
-Use the current branch name as the prefix for every generated branch.
+Use a stack prefix for every generated branch.
+If the current branch is not the repository default branch, use the current branch name as that prefix.
+If the current branch is the repository default branch and there are local changes to split, the agent should still create the stack branches, but it must first derive a concise kebab-case stack prefix from the actual change set or a user-provided task name. If it cannot infer a stable prefix with high confidence, it should ask the user for one instead of guessing badly. Never use the raw default branch name itself as the stack prefix.
 Example source branch: `feature/cloud-1142-blabla`
 Example generated branches: `feature/cloud-1142-blabla-base`, `feature/cloud-1142-blabla-auth`, `feature/cloud-1142-blabla-ui`
 
 ## Requirements
 
 - Detect the current source branch and the repository default branch. Prefer the repository default branch; fall back to `main` only if necessary.
-- Do not run this workflow from the default/base branch itself.
-- Treat the current branch name as the naming prefix for all generated stack branches.
+- If the current branch is not the default/base branch, treat the current branch name as the naming prefix for all generated stack branches.
+- If the current branch is the default/base branch and there are local changes to split, do not stop for that reason alone. Instead, derive a stack prefix, create the generated stack branches from the default/base branch, and continue the workflow from those generated branches.
+- Do not create or update a pull request from the default/base branch itself.
 - This workflow is for splitting the current local working-tree changes into a PR stack. If there are no local changes to split, stop and report that there is nothing to do.
 - Inspect the repository to detect the package manager, project scripts, PR template, and relevant quality gates before making any Git changes.
 - Run the relevant quality gates first so the current work is validated before branching:
@@ -67,7 +70,7 @@ Example generated branches: `feature/cloud-1142-blabla-base`, `feature/cloud-114
 - Do not amend, squash, rebase interactively, force-push, or bypass hooks unless explicitly instructed.
 - Do not create duplicate PRs for the same generated branch.
 - Do not leave files unassigned without explicitly reporting them and explaining why.
-- Do not open a PR from the unsplit source branch itself.
+- Do not open a PR from the unsplit source branch itself. When the source branch is also the default/base branch, that means the agent must create the generated stack branches first and only open PRs from those generated branches.
 
 ## Reporting Contract
 
@@ -79,6 +82,7 @@ Before mutating Git history or creating branches, output:
    - pass/fail result per check
 2. `Split plan`
    - a table with: branch name, intended base branch, scope/theme, file count, and why the slice exists
+   - include the chosen stack prefix and whether it came from the current branch name or was derived because the workflow started on the default/base branch
 3. `Risk notes`
    - any files that are ambiguous, tightly coupled, or likely to force a deeper dependency
 
@@ -121,7 +125,8 @@ Use these heuristics in order:
 
 1. Detect repository context
    - Inspect the repository for the current branch, default branch, package manager, lockfiles, project scripts, build tooling, and `.github/pull_request_template.md`.
-   - Success criteria: the source branch, base branch, validation commands, and PR template are known.
+   - If the current branch is the default/base branch, derive a stack prefix before any PR branches are created.
+   - Success criteria: the source branch, base branch, chosen stack prefix, validation commands, and PR template are known.
 
 2. Validate the current work before branching
    - Run the relevant repo-defined quality gates in a sensible order: lint, type-check, tests when relevant, build, and formatter when defined.
@@ -131,11 +136,12 @@ Use these heuristics in order:
 3. Inventory the current changes
    - Review staged, unstaged, and untracked files, plus the merge-base diff against the default branch when useful.
    - Produce a split plan that lists:
-     - branch name
-     - intended base branch
-     - theme or scope
-     - file count
-     - why the files belong together
+       - branch name
+       - intended base branch
+       - theme or scope
+       - file count
+       - why the files belong together
+       - stack prefix source: current branch name or derived from the change set because the workflow started on the default/base branch
    - Output the split plan before creating branches so the execution path is visible and auditable.
    - Success criteria: every changed file is assigned to a meaningful slice or explicitly marked blocked.
 
@@ -145,15 +151,15 @@ Use these heuristics in order:
    - Success criteria: the working tree is clean and the backup stash reference is known.
 
 5. Create the shared `-base` branch
-   - Create a branch named `<source-branch>-base` from the repository default branch.
+   - Create a branch named `<stack-prefix>-base` from the repository default branch.
    - Restore only the shared or common files from the stash.
    - Run the smallest relevant verification for this slice.
    - Commit, push, and create or update a draft PR against the repository default branch.
    - Success criteria: the shared base changes live in a pushed branch with a draft PR.
 
 6. Create the follow-up branches
-   - For each remaining slice, create a branch named `<source-branch>-<scope>` from its chosen parent branch.
-   - Default the parent branch to `<source-branch>-base`; only pick another generated branch when the split plan explicitly justifies that dependency.
+   - For each remaining slice, create a branch named `<stack-prefix>-<scope>` from its chosen parent branch.
+   - Default the parent branch to `<stack-prefix>-base`; only pick another generated branch when the split plan explicitly justifies that dependency.
    - Restore only that slice’s files from the stash.
    - Run the smallest relevant verification for this slice.
    - Commit, push, and create or update a draft PR against the chosen parent branch.
@@ -176,7 +182,7 @@ Use these heuristics in order:
 - The remaining work was split into meaningful stacked branches and draft PRs, with `-base` as the default parent for follow-up PRs.
 - No generated PR contains more than 20 changed files.
 - The prompt provides a structured validation summary, split plan, and final stack report.
-- Every branch name uses the original source branch name as the prefix.
+- Every branch name uses the chosen stack prefix, which comes from the original source branch name unless the workflow started on the default/base branch and a prefix had to be derived first.
 - Every commit and PR title uses a correct Gitmoji and uppercase one-line style with no scopes.
 - Every PR body matches `.github/pull_request_template.md` and reflects only the real diff for that slice.
 - The final report clearly lists the stack order, validation results, stash reference, and PR links.

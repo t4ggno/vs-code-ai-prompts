@@ -95,7 +95,7 @@ Across the repository, the prompt files follow a few common principles:
 2. Open the prompt picker or reference the files from your Copilot configuration.
 3. Choose the prompt that matches the task and provide a target scope when needed, such as a file, symbol, current selection, or view.
 4. Combine the prompts with the instruction files when you want stronger baseline rules for coding style and behavior.
-5. Adjust individual prompt wording to match your team’s conventions, approval process, or stack-specific needs.
+5. Adjust individual prompt wording to match your tformateam’s conventions, approval process, or stack-specific needs.
 
 ## When this repo is useful
 
