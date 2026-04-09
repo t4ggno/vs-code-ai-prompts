@@ -25,6 +25,7 @@ Verify that the PR implements the intended change correctly, safely, and in a ma
 - Keep changes minimal and consistent with the existing style.
 - Do **not** edit code unless the user explicitly asks you to implement the review findings.
 - If you propose code changes, ensure they are actionable and scoped; don’t refactor unrelated areas.
+- Silently ignore automated comments from coverage or code-analysis tools (for example Codecov, Codacy, or similar bots) unless the user explicitly asks to include them.
 
 ## What you must do (in order)
 
@@ -34,7 +35,7 @@ Verify that the PR implements the intended change correctly, safely, and in a ma
 - Summarize:
   - PR intent (as described)
   - status checks / CI results
-  - review comments and unresolved threads
+  - review comments and unresolved threads, excluding automated coverage/code-analysis bot comments
   - risk level (low/medium/high) with one sentence why
 - If no PR is available, explain that and stop.
 

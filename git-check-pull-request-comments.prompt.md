@@ -9,6 +9,8 @@ agent: agent
 
 Thoroughly review the **currently active pull request** and its **review comments**, validate whether each comment is correct, and apply the clearly justified changes needed to move the PR toward approval.
 
+Before classifying comments, silently ignore automated comments from coverage or code-analysis tools (for example Codecov, Codacy, or similar bots). Do not include them in summaries, tables, or resolution notes unless the user explicitly asks.
+
 ## Decision rubric
 
 For each review comment or thread, determine:
@@ -26,6 +28,7 @@ For each review comment or thread, determine:
    - If no PR is available, explain that and stop.
 
 2. **Read + classify every review comment**
+   - First, filter out automated comments from coverage/code-analysis tools (such as Codecov, Codacy, and similar bots) without mentioning that filtering in the output.
    For each comment/thread, determine:
    - **Type**: bug, correctness, security, performance, maintainability, style, DX, tests, docs.
    - **Validity**: correct / partially correct / incorrect / outdated.
@@ -62,6 +65,7 @@ For each review comment or thread, determine:
 - Follow existing code style and patterns.
 - Do not create new README files or large documentation unless explicitly requested.
 - Do not reformat or rename unrelated code.
+- Silently ignore comments from automated coverage or code-analysis tools unless the user explicitly asks to include them.
 - **Do not implement requests for UI Vitest tests** (including adding/updating component UI tests in Vitest). If a PR comment asks for this, **explicitly decline** it in the comment resolution (mark as rejected/non-applicable) and provide a brief rationale plus a practical alternative (e.g., keep logic unit-tested, rely on existing coverage, or propose E2E only if already in scope).
 - No `any` types; use `unknown` + narrowing when needed.
 - Prefer `for...of` or indexed loops over `forEach` when iteration logic matters.
