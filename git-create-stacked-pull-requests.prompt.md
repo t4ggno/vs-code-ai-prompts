@@ -136,12 +136,12 @@ Use these heuristics in order:
 3. Inventory the current changes
    - Review staged, unstaged, and untracked files, plus the merge-base diff against the default branch when useful.
    - Produce a split plan that lists:
-       - branch name
-       - intended base branch
-       - theme or scope
-       - file count
-       - why the files belong together
-       - stack prefix source: current branch name or derived from the change set because the workflow started on the default/base branch
+     - branch name
+     - intended base branch
+     - theme or scope
+     - file count
+     - why the files belong together
+     - stack prefix source: current branch name or derived from the change set because the workflow started on the default/base branch
    - Output the split plan before creating branches so the execution path is visible and auditable.
    - Success criteria: every changed file is assigned to a meaningful slice or explicitly marked blocked.
 
